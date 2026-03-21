@@ -24,8 +24,20 @@ def coordsTo2dLol(xcoords, ycoords, iters):
     return(listOfCoords)
 
 
-
-
+def randPolyGenerator(iters):
+    listOfLayers = []
+    for i in iters:
+        randPoints = random.randint(3, 8)
+        vertices = random_polygon(num_points=randPoints)
+        x_coords, y_coords = zip(*vertices)
+        x_coords = list(x_coords) + [x_coords[0]]
+        y_coords = list(y_coords) + [y_coords[0]]
+        listOfCoords = []
+            for k in range(len(x_coords)):
+                coords = [x_coords[k], y_coords[k], 0]
+                listOfCoords.append(coords)
+        listOfLayers.append(listOfCoords)
+        
 randPoints = random.randint(3, 8)
 randIters = random.randint(3, 8)
 vertices = random_polygon(num_points=randPoints)
