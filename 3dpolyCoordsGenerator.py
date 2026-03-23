@@ -1,12 +1,19 @@
+#The actual 3D coords are currently being generated properly
+#We don't need a z rotation as that just rotates an already random polygon in the x-y plane in the same plane
+    #This has been changed but needs to be tested
+#Working on mapping the points
+#Next step is to actually connect the points to make a closed polygon
 from polygenerator import random_polygon
 import matplotlib.pyplot as plt
 import random
 import numpy as np
 from numpy.linalg import norm
 from scipy.spatial.transform import Rotation
+#Added libraries for testing here
+from matplotlib.tri import Triangulation
 
 def planeTransform(numLayers):
-    rotVects = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+    rotVects = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]
     transLayers = []
     for layer in numLayers:
         transPlanes = []
@@ -22,6 +29,19 @@ def planeTransform(numLayers):
             transPlanes.append(transCoords)
         transLayers.append(transPlanes)
     return(transLayers)
+
+#Testing for future starting here
+#Need to take all of the information and split it into specific x, y, and z values, store them as lists and return the lists
+#Try this out to see what you get
+def separateCoords(polyInfo):
+    x, y, z = [], [], []
+    for group in polyInfo:
+        for plane in group:
+            for pt in plane:
+                x.append(pt[0])
+                y.append(pt[1])
+                z.append(pt[2])
+    return x, y, z
          
           
      
@@ -46,3 +66,9 @@ layersList = [randPolyGenerator(randIters)]
 print(layersList)
 randPlane = planeTransform(layersList)
 print(f"Plane transform: {randPlane}")
+
+#New for testing plotting the actual points
+x_list, y_list, z_list  = separateCoords(randPlane)
+ax.scatter(x_list, y_list, z_list)
+ax.set_title('3D Scarrter Plot from List')
+plt.show()
