@@ -1,4 +1,16 @@
 #The actual 3D coords are currently being generated properly
+#Currently we are kind of cooking
+#The coordinates are coordinating really well and iterating with the 
+#same amount of points which is good
+"""The current problem is that when we are getting values into the z axis
+they are barely getting there, in general all of the points that are 
+translating into the z axis are doing so by no better than 1 hundredth 
+which seemingly creates another plane which is not by intent. Need to
+determine a different way to rotate the points in order to get more
+diverse polygons. Furthermore, it seems the random polygon generator
+generates a lot of ones and zeros, which might not be the end of the
+world, but something to consider"""
+#Next steps: Determining a better rotation method to get points further into the z plane
 from polygenerator import random_polygon
 import matplotlib.pyplot as plt
 import random
@@ -50,7 +62,7 @@ def randPolyGenerator(iters):
         listOfLayers.append(listOfCoords)
     return(listOfLayers)
 
-randIters = random.randint(3, 5)
+randIters = random.randint(3, 4)
 layersList = [randPolyGenerator(randIters)]
 print(f"Pre transform: {layersList}")
 randPlane = planeTransform(layersList)
@@ -59,6 +71,7 @@ print(f"Plane transform: {randPlane}")
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 x_list, y_list, z_list  = separateCoords(randPlane)
+print(f"xList: {x_list}, yList: {y_list}, zList: {z_list}")
 ax.scatter(x_list, y_list, z_list)
 ax.set_title('3D Scarrter Plot from List')
 plt.show()
