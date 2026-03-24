@@ -1,16 +1,11 @@
 #The actual 3D coords are currently being generated properly
-#We don't need a z rotation as that just rotates an already random polygon in the x-y plane in the same plane
-    #This has been changed but needs to be tested
-#Working on mapping the points
-#Next step is to create a .csv file that you can export all of these values to
 from polygenerator import random_polygon
 import matplotlib.pyplot as plt
 import random
 import numpy as np
 from numpy.linalg import norm
 from scipy.spatial.transform import Rotation
-#Added libraries for testing here
-from matplotlib.tri import Triangulation
+from mpl_toolkits.mplot3d import Axes3D
 
 def planeTransform(numLayers):
     rotVects = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]
@@ -30,9 +25,6 @@ def planeTransform(numLayers):
         transLayers.append(transPlanes)
     return(transLayers)
 
-#Testing for future starting here
-#Need to take all of the information and split it into specific x, y, and z values, store them as lists and return the lists
-#Try this out to see what you get
 def separateCoords(polyInfo):
     x, y, z = [], [], []
     for group in polyInfo:
@@ -41,11 +33,8 @@ def separateCoords(polyInfo):
                 x.append(pt[0])
                 y.append(pt[1])
                 z.append(pt[2])
-    return x, y, z
-         
-          
+    return x, y, z      
      
-
 def randPolyGenerator(iters):
     listOfLayers = []
     for i in range(iters):
@@ -61,13 +50,14 @@ def randPolyGenerator(iters):
         listOfLayers.append(listOfCoords)
     return(listOfLayers)
 
-randIters = random.randint(3, 7)
+randIters = random.randint(3, 5)
 layersList = [randPolyGenerator(randIters)]
-print(layersList)
+print(f"Pre transform: {layersList}")
 randPlane = planeTransform(layersList)
 print(f"Plane transform: {randPlane}")
 
-#New for testing plotting the actual points
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
 x_list, y_list, z_list  = separateCoords(randPlane)
 ax.scatter(x_list, y_list, z_list)
 ax.set_title('3D Scarrter Plot from List')
