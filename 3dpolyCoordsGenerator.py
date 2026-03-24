@@ -2,7 +2,7 @@
 #We don't need a z rotation as that just rotates an already random polygon in the x-y plane in the same plane
     #This has been changed but needs to be tested
 #Working on mapping the points
-#Next step is to actually connect the points to make a closed polygon
+#Next step is to create a .csv file that you can export all of these values to
 from polygenerator import random_polygon
 import matplotlib.pyplot as plt
 import random
