@@ -45,7 +45,16 @@ def separateCoords(polyInfo):
                 x.append(pt[0])
                 y.append(pt[1])
                 z.append(pt[2])
-    return x, y, z      
+    return x, y, z     
+
+#Returns a single list with all of the included points
+def pointsList(info):
+    pointList = []
+    for group in info:
+        for plane in group:
+            for pt in plane:
+                pointList.append(pt)   
+    return(pointList) 
      
 def randPolyGenerator(iters):
     listOfLayers = []
@@ -64,14 +73,18 @@ def randPolyGenerator(iters):
 
 randIters = random.randint(3, 4)
 layersList = [randPolyGenerator(randIters)]
-print(f"Pre transform: {layersList}")
+#print(f"Pre transform: {layersList}")
 randPlane = planeTransform(layersList)
-print(f"Plane transform: {randPlane}")
+#print(f"Plane transform: {randPlane}")
 
+points = pointsList(randPlane)
+print(f"List of coords: {points}")
+
+"""
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 x_list, y_list, z_list  = separateCoords(randPlane)
 print(f"xList: {x_list}, yList: {y_list}, zList: {z_list}")
 ax.scatter(x_list, y_list, z_list)
 ax.set_title('3D Scarrter Plot from List')
-plt.show()
+plt.show()"""
