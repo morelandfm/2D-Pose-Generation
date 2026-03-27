@@ -6,7 +6,7 @@ from numpy.linalg import norm
 from scipy.spatial.transform import Rotation
 from mpl_toolkits.mplot3d import Axes3D
 
-#Takes a list of lists of lists and turns it into a list of points and returns that list
+#Takes a list of lists of lists and turns it into a list of points (x, y, z) and returns that list
 def pointsList(info):
     pointList = []
     for group in info:
@@ -28,8 +28,11 @@ def distanceFromOrigin(coords):
     sortedMags, sortedCoords = zip(*sortedZip)
     return(sortedCoords)
 
+###
+#Will replace distanceFromOrigin func, as the initial point will just become (0,0,0)
+#Just make sure that you are passing to this function the coords list that doesn't have the initialPoint in it
 def distanceFromPoint(initialPoint, coords):
-    if initialPoint == 0:
+    if np.linalg.norm(initialPoint) == 0:
         magnitude = []
         for point in coords:
             mag = np.linalg.norm(point)
@@ -40,7 +43,7 @@ def distanceFromPoint(initialPoint, coords):
         return(sortedCoords)
     vectList = []
     for point in coords:
-        vect = [(initialPoint[0]-point[0], initialPoint[1]-point[1]), initialPoint[2]-point[2]]
+        vect = [(initialPoint[0]-point[0], initialPoint[1]-point[1], initialPoint[2]-point[2])]
         vectList.append(vect)
     vectMag = []
     for point in vectList:
