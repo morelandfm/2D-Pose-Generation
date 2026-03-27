@@ -37,6 +37,7 @@ def planeTransform(numLayers):
         transLayers.append(transPlanes)
     return(transLayers)
 
+
 def separateCoords(polyInfo):
     x, y, z = [], [], []
     for group in polyInfo:
@@ -54,8 +55,22 @@ def pointsList(info):
         for plane in group:
             for pt in plane:
                 pointList.append(pt)   
-    return(pointList) 
-     
+    return(pointList)
+
+#Determining the distance each point is from the origin with its magnitude and then ordering the points from highest to lowest and 
+#returning the list of points
+def distanceFromOrigin(coords):
+    magnitude = []
+    for point in coords:
+        mag = np.linalg.norm(point)
+        magnitude.append(mag)
+    zipped = zip(magnitude, coords)
+    sortedZip = sorted(zipped, key=lambda x: x[0], reverse=True)
+    sortedMags, sortedCoords = zip(*sortedZip)
+    return(sortedMags,sortedCoords)
+
+
+#Getting way too many zeros here, gotta figuer that out
 def randPolyGenerator(iters):
     listOfLayers = []
     for i in range(iters):
@@ -78,12 +93,19 @@ randPlane = planeTransform(layersList)
 #print(f"Plane transform: {randPlane}")
 
 points = pointsList(randPlane)
-print(f"List of coords: {points}")
+#print(f"List of coords: {points}")
+mags, dist = distanceFromOrigin(points)
+print(f"List of point ordered distances from the origin: {dist}")
+print(f"List of distance ordered magnitudes{mags}")
 
 """
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 x_list, y_list, z_list  = separateCoords(randPlane)
+print(f"xList: {x_list}, yList: {y_list}, zList: {z_list}")
+ax.scatter(x_list, y_list, z_list)
+ax.set_title('3D Scarrter Plot from List')
+plt.show()"""
 print(f"xList: {x_list}, yList: {y_list}, zList: {z_list}")
 ax.scatter(x_list, y_list, z_list)
 ax.set_title('3D Scarrter Plot from List')
