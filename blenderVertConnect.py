@@ -16,9 +16,9 @@ bpy.context.scene.collection.objects.link(mesh_obj)
 
 bm = bmesh.new()
 
-bmesh.ops.create_icosphere(bm, subdivisions = 1, radius = 2.0)
+"""bmesh.ops.create_icosphere(bm, subdivisions = 1, radius = 2.0)
 
-"""
+
 In console can write
 
 import bmesh
@@ -26,7 +26,7 @@ import bmesh
 bmesh.ops.create_ then press tab to see options
 """
 
-"""vert_coords = [
+vert_coords = [
     (1.0, 1.0, 0.0),
     (1.0, -1.0, 0.0),
     (-1.0, -1.0, 0.0),
@@ -48,7 +48,7 @@ face_vert_indices = [
     ]
 
 for vert_indices in face_vert_indices:
-    bm.faces.new([bm.verts[index] for index in vert_indices])"""
+    bm.faces.new([bm.verts[index] for index in vert_indices])
 
 #Writes bmesh data into the mesh data
 bm.to_mesh(mesh_data)
@@ -80,4 +80,22 @@ print("selected vert")
 for ver in selected_verts:
     print(f"{vert_index}")
 
-bm.free()
+bm.free()"""
+
+"""Alright so here we are going to kind of write the sudo code for creating the objects from the lists in the connectedCoords program
+So the first thing to know is that we are receiving a list of tuples. Similarly to how this program does it up above we need to independently go 
+through each list of tuples and then connect all of the points in that list to each other.
+
+To start:
+#We have our working list of tuples
+connectingCoordTuple = listCompression(connectedCoords)
+Want to break the list of lists of tuples into individual lists of tuples
+for tup in connectingCoordTuple:
+    vertCoords = []
+    for i in range(len(tup)):
+        vertCoords.append(tup[i])
+    for coord in vertCoords:
+        bm.verts.new(coord)
+    bm.verts.ensure_lookup_table()   
+    faceVertIndices = []
+    
