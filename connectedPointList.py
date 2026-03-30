@@ -112,6 +112,14 @@ def distanceFromOrigin(coords):
     sortedMags, sortedCoords = zip(*sortedZip)
     return(sortedMags,sortedCoords)
 
+#Blender makes it shapes from a list of tuples, so we need to convert the list of lists to a list of tuples with this function
+def listCompression(listOfLists):
+    newListOfTuples = []
+    for point in listOfLists:
+        listOfTuples = [tuple(sublist) for sublist in point]
+        newListOfTuples.append(listOfTuples)
+    return(newListOfTuples)
+
 
 #Just make sure that you are passing to this function the coords list that doesn't have the initialPoint in it
 #Just make sure that you are passing to this function the coords list that doesn't have the initialPoint in it
@@ -170,5 +178,7 @@ points = pointsList(randPlane)
 
 ###NEW TESTING HERE
 emptyList, listOfPlanestoBeAttached = planeMaker(points)
-print(f"List of prePoints: {points}")
-print(f"List of points: {listOfPlanestoBeAttached}")
+planesAsTuples = listCompression(listOfPlanestoBeAttached)
+#print(f"List of prePoints: {points}")
+#print(f"List of points: {listOfPlanestoBeAttached}")
+print(f"List of planes as tuples: {planesAsTuples}")
