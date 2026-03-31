@@ -88,6 +88,17 @@ So the first thing to know is that we are receiving a list of tuples. Similarly 
 through each list of tuples and then connect all of the points in that list to each other.
 
 To start:
+
+#Naming the object
+obj_name = "my shape"
+#Adding mesh to the object
+mesh_data = bpy.data.meshes.new(f"{obj_name}_data")
+#Adding mesh object using mesh data
+mesh_obj = bpy.data.objects.new(obj_name, mesh_data)
+#Links the mesh to my shape and adds it to the scene
+bpy.context.scene.collection.objects.link(mesh_obj)
+
+bm = bmesh.new()
 #We have our working list of tuples
 connectingCoordTuple = listCompression(connectedCoords)
 Want to break the list of lists of tuples into individual lists of tuples
@@ -100,5 +111,12 @@ for tup in connectingCoordTuple:
         bm.faces.new((firstVert, vertObjs[i], vertObjs[i+1]))
     bm.faces.new((firstVert, vertObjs[-1], vertObjs[1]))
         
-    
+#Writes bmesh data into the mesh data
+bm.to_mesh(mesh_data)
+
+#Update the mesh data, this helps with redrawing the mesh in the viewport
+mesh_data.update()
+
+#Clean up and free memory that was allocated for the bmesh
+bm.free()   
 """
