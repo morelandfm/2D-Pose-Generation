@@ -92,15 +92,13 @@ To start:
 connectingCoordTuple = listCompression(connectedCoords)
 Want to break the list of lists of tuples into individual lists of tuples
 for tup in connectingCoordTuple:
-    vertCoords = []
-    for i in range(len(tup)):
-        vertCoords.append(tup[i])
-    for coord in vertCoords:
-        bm.verts.new(coord)
+    vertObjs = [bm.verts.new(coord) for coord in tup]
     bm.verts.ensure_lookup_table()
-    #Doing too much, if you have n vertices you have n-1 planes. Connect each point to your zero point, you aren't connecting them all to each other only the original one
-    #Might still need to do it in CW or CCW though
-    #Each faceVertIndices starts with the initial point in the vertCoords list, then makes a combination with the next two, then the next two
-    #So we make a new list, 
-    faceVertIndices = []
+    #Make sure that the first item in the list is the connected point
+    firstVert = vertObjs[0]
+    for i in range(1, len(vertObjs) -1):
+        bm.faces.new((firstVert, vertObjs[i], vertObjs[i+1]))
+    bm.faces.new((firstVert, vertObjs[-1], vertObjs[1]))
+        
+    
 """
