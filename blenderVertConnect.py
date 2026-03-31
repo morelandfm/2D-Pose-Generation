@@ -1,6 +1,7 @@
 #Lesson here https://www.youtube.com/watch?v=N3U2noAHgBo
 import bpy
 import bmesh
+import math
 
 """What we are doing here is everything that you can do from the actual user interface
 just with the code, this makes it a little more intuitive for me"""
@@ -96,6 +97,10 @@ for tup in connectingCoordTuple:
         vertCoords.append(tup[i])
     for coord in vertCoords:
         bm.verts.new(coord)
-    bm.verts.ensure_lookup_table()   
+    bm.verts.ensure_lookup_table()
+    #Doing too much, if you have n vertices you have n-1 planes. Connect each point to your zero point, you aren't connecting them all to each other only the original one
+    #Might still need to do it in CW or CCW though
+    #Each faceVertIndices starts with the initial point in the vertCoords list, then makes a combination with the next two, then the next two
+    #So we make a new list, 
     faceVertIndices = []
-    
+"""
