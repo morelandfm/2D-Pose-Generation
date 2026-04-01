@@ -1,4 +1,4 @@
-#Next steps: Determining a better rotation method to get points further into the z plane
+#Code currently appears to be working as intended
 from polygenerator import random_polygon
 import matplotlib.pyplot as plt
 import random
@@ -110,69 +110,26 @@ def distanceFromOrigin(coords):
     return(sortedMags,sortedCoords)
 
 ###
-"""
-#This is a list of lists of tuples, going to need to index as such
-def ccwOrder(list):
-    for lists in list:
-        #Now we have a list of tuples, this should be done in the order of the connected points
-        #Split the list into the connecting point and all of the other points
-        center = lists[0]
-        coords = lists[1:]
-        #Now center is the connecting coordinate and coords is the rest of the coordinates in the list, but each is a tuple
-        #X check to see if x is the biggest
-        if center[0] > center[1] and center[0] > center[2]
-            #X is the biggest value order by angles in yz plane
-            ccwX = []
-            for point in coords:
-                dy = coords[point[1] - center[1]
-                dz = coords[point[2] - center[2]
-                rads = math.atan2(dy, dz)
-                degs = math.degrees(rads)
-                ccwX.append(degs)
-        if center[1] > center[0] and center[1] > center[2]
-            #Y is the biggest value order by angles in xz plane
-            ccwY = []
-            for point in coords:
-                dx = coords[point[0] - center[0]
-                dz = coords[point[2] - center[2]
-                rads = math.atan2(dx, dz)
-                degs = math.degrees(rads)
-                ccwY.append(degs)
-        if center[2] > center[1] and center[2] > center[0]
-            #Z is the biggest value order by angles in xy plane
-            ccwZ = []
-            for point in coords:
-                dy = coords[point[1] - center[1]
-                dx = coords[point[0] - center[0]
-                rads = math.atan2(dy, dx)
-                degs = math.degrees(rads)
-                ccwX.append(degs)"""
 def ccwOrder(listOfLists):
     orderedResults = []
-
     for pointsList in listOfLists:
         center = pointsList[0]
-        coords = pointsList[1:]
-        
+        coords = pointsList[1:]  
         # 1. Determine which plane to use
         # X is largest: Use YZ plane
         if center[0] > center[1] and center[0] > center[2]:
             # Sort by atan2(dy, dz)
-            coords.sort(key=lambda p: math.atan2(p[1] - center[1], p[2] - center[2]))
-            
+            coords.sort(key=lambda p: math.atan2(p[1] - center[1], p[2] - center[2]))       
         # Y is largest: Use XZ plane
         elif center[1] > center[0] and center[1] > center[2]:
             # Sort by atan2(dx, dz)
-            coords.sort(key=lambda p: math.atan2(p[0] - center[0], p[2] - center[2]))
-            
+            coords.sort(key=lambda p: math.atan2(p[0] - center[0], p[2] - center[2]))     
         # Z is largest: Use XY plane
         else:
             # Sort by atan2(dy, dx)
-            coords.sort(key=lambda p: math.atan2(p[1] - center[1], p[0] - center[0]))
-        
+            coords.sort(key=lambda p: math.atan2(p[1] - center[1], p[0] - center[0])) 
         # Re-combine center with the now-sorted coordinates
-        orderedResults.append([center] + coords)
-        
+        orderedResults.append([center] + coords)       
     return orderedResults
 
 #Blender makes it shapes from a list of tuples, so we need to convert the list of lists to a list of tuples with this function
@@ -189,10 +146,8 @@ def listCompression(listOfLists):
 def distanceFromPoint(initialPoint, coords, initialCheck):
     if not coords:
         return []
-    
     # Use NumPy to calculate distances for the whole list at once (much faster)
     coords_arr = np.array(coords)
-    
     if initialCheck == 0:
         # Distance from origin
         distances = np.linalg.norm(coords_arr, axis=1)
@@ -202,8 +157,7 @@ def distanceFromPoint(initialPoint, coords, initialCheck):
         # Distance from initialPoint
         distances = np.linalg.norm(coords_arr - np.array(initialPoint), axis=1)
         # Sort ascending (closest first)
-        indices = np.argsort(distances)
-        
+        indices = np.argsort(distances)   
     return coords_arr[indices].tolist()
 
 
