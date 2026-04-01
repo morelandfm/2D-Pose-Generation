@@ -6,6 +6,7 @@ import numpy as np
 from numpy.linalg import norm
 from scipy.spatial.transform import Rotation
 from mpl_toolkits.mplot3d import Axes3D
+import math
 
 #Take in 2d coordinates and transform them across either the x or y axis and
 #return the list
@@ -48,21 +49,24 @@ def pointsList(info):
                 pointList.append(pt)   
     return(pointList)
 
+###
+def cwOrder(list):
+    #Split the list into the connecting point and all of the other points
+    center = list[0]
+    coords = list[1:]
+    
+
 """Take in a number of connections to iterate over, an initial point that will be used to determine the connections
 and then a list of coords from the reamining list"""
 def connectedCoords(numConns, initialPoint, coords):
     # Get neighbors sorted by distance from the initial point
-    sortedNeighbors = distanceFromPoint(initialPoint, coords, 1)
-    
+    sortedNeighbors = distanceFromPoint(initialPoint, coords, 1)    
     # Start the list with the initial point
     coordsToConnect = [initialPoint]
-    
     # Append the closest N neighbors
     coordsToConnect.extend(sortedNeighbors[:numConns])
-    
     return coordsToConnect
 
-###
 """Here is the big one, take in a list of coord and return an appended list of coords without the newly connected point, and the new list to be connected
 """
 def planeMaker(coords, polyConnectCoords=None):
@@ -120,10 +124,6 @@ def listCompression(listOfLists):
         newListOfTuples.append(listOfTuples)
     return(newListOfTuples)
 
-
-#Just make sure that you are passing to this function the coords list that doesn't have the initialPoint in it
-#Just make sure that you are passing to this function the coords list that doesn't have the initialPoint in it
-#The initial check is so that we return the list ordered by either furthest or closes, if initialCheck 0, then furthest, else closest
 #The initial check is getting an ordered list based on how far they are from the origin and working back towards it,
 #the next check is for ordering points based off of how close they are to the one being connected...  Maybe make two different ones
 #Returns a sorted list of coordinates based on their distance from the initial point from high to low
