@@ -7,6 +7,7 @@ from numpy.linalg import norm
 from scipy.spatial.transform import Rotation
 from mpl_toolkits.mplot3d import Axes3D
 import math
+import pickle
 
 #Take in 2d coordinates and transform them across either the x or y axis and
 #return the list
@@ -197,3 +198,6 @@ ccwOrderedListOfListOfTuples = ccwOrder(planesAsTuples)
 #print(f"List of points: {listOfPlanestoBeAttached}")
 #print(f"List of planes as tuples: {planesAsTuples}")
 print(f"List of CCW ordered planes as a list of tuples: {ccwOrderedListOfListOfTuples}")
+
+with open('listOfListsOfTuples.pkl', 'wb') as f:
+    pickle.dump(ccwOrderedListOfListOfTuples, f)
