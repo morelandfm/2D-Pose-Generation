@@ -29,18 +29,6 @@ def planeTransform(numLayers):
         transLayers.append(transPlanes)
     return(transLayers)
 
-#Used to graph/visuallize the list by splitting the list
-#into its x, y and z values before being passed to a graphing func
-def separateCoords(polyInfo):
-    x, y, z = [], [], []
-    for group in polyInfo:
-        for plane in group:
-            for pt in plane:
-                x.append(pt[0])
-                y.append(pt[1])
-                z.append(pt[2])
-    return x, y, z     
-
 #Returns a single list with all of the included points
 def pointsList(info):
     pointList = []
@@ -97,18 +85,6 @@ def planeMaker(coords, polyConnectCoords=None):
     #List of points that will actually be getting connected to each other
     polyConnectCoords.append(connectedCoords(random.randint(4,7), pointToBeConnected, orderedListFromConnectingPointToConnectedPoints))
     return(planeMaker(newNewCoords, polyConnectCoords))
-
-#Determining the distance each point is from the origin with its magnitude and then ordering the points from highest to lowest and 
-#returning the list of points
-def distanceFromOrigin(coords):
-    magnitude = []
-    for point in coords:
-        mag = np.linalg.norm(point)
-        magnitude.append(mag)
-    zipped = zip(magnitude, coords)
-    sortedZip = sorted(zipped, key=lambda x: x[0], reverse=True)
-    sortedMags, sortedCoords = zip(*sortedZip)
-    return(sortedMags,sortedCoords)
 
 ###
 def ccwOrder(listOfLists):
