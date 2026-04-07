@@ -40,3 +40,34 @@ mesh_data.update()
 
 #Clean up and free memory that was allocated for the bmesh
 bm.free() 
+
+#potential animation function
+
+def animate(time, obj):
+    
+    #Make three random angles for the euler rotation
+    xRot = math.radians(random.randint(0,360))
+    yRot = math.radians(random.randint(0,360))
+    zRot = math.radians(random.randint(0,360))
+
+    #Angular velocity
+    xAv = xRot / 30
+    yAv = yRot / 30
+    zAv = zRot / 30
+    
+    #Initial starting position for the object
+    mesh_obj.rotation_euler = [0, 0, 0]
+    
+    #Have to start at 1
+    i = 1
+    
+    #Initial position
+    mesh_obj.keyframe_insert(data_path = 'rotation_euler', frame = 1)
+    for i in range(time):
+        #Actually rotate the object
+        mesh_obj.rotation_euler = [(xAv * (i * 30)), (yAv * (i * 30)), (zAv * (i * 30))]
+
+        #Capturing the final position
+        mesh_obj.keyframe_insert(data_path = 'rotation_euler', frame = (i * 30))
+        
+animate(4, mesh_obj)
