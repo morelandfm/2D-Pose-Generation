@@ -36,7 +36,7 @@ def planeTransform(numLayers):
         transPlanes = []
         for plane in layer:
             transCoords = []
-            rotVector = np.deg2rad(random.randint(0, 360) * np.array(random.choice(rotVects))
+            rotVector = np.deg2rad(random.randint(0, 360) * np.array(random.choice(rotVects)))
             rot = Rotation.from_rotvec(rotVector)
             for point in plane:
                 transformedCoords = rot.apply(point)
