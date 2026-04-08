@@ -69,14 +69,12 @@ def planeMaker(coords, polyConnectCoords=None):
         pointToBeConnected = newCoords[0]
         #Remove chosen point from the coords list
         newNewCoords =  newCoords[:1]
-        #Make an empty list to be done, could also just change newCoords to be an empty list
-        emptyList = []
         #connect remaining points
         #Make a list for the points to be connected, ensure to use the 1 so that it returns the list of points closest to the pointToBeConnected
         orderedListFromConnectingPointToConnectedPoints = distanceFromPoint(pointToBeConnected, newNewCoords, 1)
         #List of points that will actually be getting connected to each other
         polyConnectCoords.append(connectedCoords(len(coords), pointToBeConnected, orderedListFromConnectingPointToConnectedPoints))
-        return(emptyList, polyConnectCoords)
+        return(polyConnectCoords)
     
     #First things first, we need to determine everything's distance from the origin, this will give us an ordered list from high to low
     newCoords = distanceFromPoint([(0,0,0)],coords, 0)
@@ -161,7 +159,7 @@ randPlane = planeTransform(layersList)
 #Turn the list of lists into a single list
 points = pointsList(randPlane)
 #WRITE STUFF HERE
-emptyList, listOfPlanestoBeAttached = planeMaker(points)
+listOfPlanestoBeAttached = planeMaker(points)
 #Make the planes into tuples
 planesAsTuples = listCompression(listOfPlanestoBeAttached)
 #Order the tuples CCW
