@@ -36,7 +36,7 @@ def pointsList(info):
         for plane in group:
             for pt in plane:
                 pointList.append(pt)   
-    return(pointList)
+    return pointList 
 
 """Take in a number of connections to iterate over, an initial point that will be used to determine the connections
 and then a list of coords from the reamining list"""
@@ -115,7 +115,7 @@ def listCompression(listOfLists):
     for point in listOfLists:
         listOfTuples = [tuple(sublist) for sublist in point]
         newListOfTuples.append(listOfTuples)
-    return(newListOfTuples)
+    return newListOfTuples
 
 #The initial check is getting an ordered list based on how far they are from the origin and working back towards it,
 #the next check is for ordering points based off of how close they are to the one being connected...  Maybe make two different ones
@@ -155,7 +155,16 @@ def randPolyGenerator(iters):
                 coords = [x_coords[k], y_coords[k], 0]
                 listOfCoords.append(coords)
         listOfLayers.append(listOfCoords)
-    return(listOfLayers)
+    return listOfLayers
+
+def rand3dPolyGen(iters):
+    layersList = randPolyGenerator(iters)
+    randPlane = planeTransofrm(layersList)
+    points = pointsList(randPlane)
+    listOfPlanestoBeAttached = planeMaker(points)
+    planesAsTuples = listCompression(listOfPlanestoBeAttached)
+    ccwOrderedListOfListsOfTuples = ccwOrder(planesAsTuples)
+    return ccwOrderedListOfListsOfTuples
 
 #Random number of iterations for the random polygon
 randIters = random.randint(3, 4)
