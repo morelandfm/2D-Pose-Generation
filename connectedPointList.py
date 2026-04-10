@@ -31,18 +31,6 @@ def planeTransform(numLayers):
         transLayers.append(transPlanes)
     return(transLayers)
 
-#Used to graph/visuallize the list by splitting the list
-#into its x, y and z values before being passed to a graphing func
-def separateCoords(polyInfo):
-    x, y, z = [], [], []
-    for group in polyInfo:
-        for plane in group:
-            for pt in plane:
-                x.append(pt[0])
-                y.append(pt[1])
-                z.append(pt[2])
-    return x, y, z     
-
 #Returns a single list with all of the included points
 def pointsList(info):
     pointList = []
@@ -209,17 +197,18 @@ def separateCoords(polyInfo):
 
 #Adjusts all of the values so that the centroid of the object is at zero
 def center(points):
-    cent = centroid(points)
-    cx, cy, cz = cent
     centeredCoords = []
+    cx, cy, cz = centroid(points)
     for group in points:
-        for x, y, z in group:
-            centeredCoords.append((x - cx, y - cy, z - cz))
+        newGroup = []
+        for coord in group:
+            newGroup.append((coord[0] - cx, coord[1] - cy, coord[2] - cz))
+        centeredCoords.append(newGroup)
     return centeredCoords
 
 randPoly = rand3dPolyGen(random.randint(3, 4))
-print(f"Here it is{randPoly}")
 randPoly = center(randPoly)
+print(f"Here it is{randPoly}")
 
 #with open('listOfListsOfTuples.pkl', 'wb') as f:
     #pickle.dump(randPoly, f)
