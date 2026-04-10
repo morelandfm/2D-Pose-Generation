@@ -1,4 +1,6 @@
 #Code currently appears to be working as intended
+###THINGS TO DO
+#Scaling: write into the program a way to scale the size of the object
 from polygenerator import random_polygon
 import matplotlib.pyplot as plt
 import random
