@@ -29,6 +29,18 @@ def planeTransform(numLayers):
         transLayers.append(transPlanes)
     return(transLayers)
 
+#Used to graph/visuallize the list by splitting the list
+#into its x, y and z values before being passed to a graphing func
+def separateCoords(polyInfo):
+    x, y, z = [], [], []
+    for group in polyInfo:
+        for plane in group:
+            for pt in plane:
+                x.append(pt[0])
+                y.append(pt[1])
+                z.append(pt[2])
+    return x, y, z     
+
 #Returns a single list with all of the included points
 def pointsList(info):
     pointList = []
@@ -36,7 +48,7 @@ def pointsList(info):
         for plane in group:
             for pt in plane:
                 pointList.append(pt)   
-    return pointList 
+    return(pointList)
 
 """Take in a number of connections to iterate over, an initial point that will be used to determine the connections
 and then a list of coords from the reamining list"""
@@ -49,9 +61,7 @@ def connectedCoords(numConns, initialPoint, coords):
     coordsToConnect.extend(sortedNeighbors[:numConns])
     return coordsToConnect
 
-###
-"""Here is the big one, take in a list of coord and return an appended list of coords without the newly connected point, and the new list to be connected
-"""
+#Here is the big one, take in a list of coord and return an appended list of coords without the newly connected point, and the new list to be connected
 def planeMaker(coords, polyConnectCoords=None):
     if polyConnectCoords is None:
         polyConnectCoords = []
@@ -66,20 +76,15 @@ def planeMaker(coords, polyConnectCoords=None):
         pointToBeConnected = newCoords[0]
         #Remove chosen point from the coords list
         newNewCoords =  newCoords[:1]
-        #Make an empty list to be done, could also just change newCoords to be an empty list
-        emptyList = []
         #connect remaining points
         #Make a list for the points to be connected, ensure to use the 1 so that it returns the list of points closest to the pointToBeConnected
         orderedListFromConnectingPointToConnectedPoints = distanceFromPoint(pointToBeConnected, newNewCoords, 1)
         #List of points that will actually be getting connected to each other
         polyConnectCoords.append(connectedCoords(len(coords), pointToBeConnected, orderedListFromConnectingPointToConnectedPoints))
-        return(emptyList, polyConnectCoords)
-
-    #First thing we are going to do is find the centroid and shift all of the points so that the centroid is at zero
-    #We can do this in one function
-    centeredCoords = center(coords)
-    #Determine everything's distance from the origin, this will give us an ordered list from high to low
-    newCoords = distanceFromPoint([(0,0,0)],centeredCoords, 0)
+        return(polyConnectCoords)
+    
+    #First things first, we need to determine everything's distance from the origin, this will give us an ordered list from high to low
+    newCoords = distanceFromPoint([(0,0,0)],coords, 0)
     #Take our first point which is the furthest point from the origin
     pointToBeConnected = newCoords[0]
     #Remove chosen point from the coords list
@@ -90,6 +95,17 @@ def planeMaker(coords, polyConnectCoords=None):
     polyConnectCoords.append(connectedCoords(random.randint(4,7), pointToBeConnected, orderedListFromConnectingPointToConnectedPoints))
     return(planeMaker(newNewCoords, polyConnectCoords))
 
+#Determining the distance each point is from the origin with its magnitude and then ordering the points from highest to lowest and 
+#returning the list of points
+def distanceFromOrigin(coords):
+    magnitude = []
+    for point in coords:
+        mag = np.linalg.norm(point)
+        magnitude.append(mag)
+    zipped = zip(magnitude, coords)
+    sortedZip = sorted(zipped, key=lambda x: x[0], reverse=True)
+    sortedMags, sortedCoords = zip(*sortedZip)
+    return(sortedMags,sortedCoords)
 
 def ccwOrder(listOfLists):
     orderedResults = []
@@ -119,7 +135,7 @@ def listCompression(listOfLists):
     for point in listOfLists:
         listOfTuples = [tuple(sublist) for sublist in point]
         newListOfTuples.append(listOfTuples)
-    return newListOfTuples
+    return(newListOfTuples)
 
 #The initial check is getting an ordered list based on how far they are from the origin and working back towards it,
 #the next check is for ordering points based off of how close they are to the one being connected...  Maybe make two different ones
@@ -159,67 +175,53 @@ def randPolyGenerator(iters):
                 coords = [x_coords[k], y_coords[k], 0]
                 listOfCoords.append(coords)
         listOfLayers.append(listOfCoords)
-    return listOfLayers
+    return(listOfLayers)
+
 
 def rand3dPolyGen(iters):
-    layersList = randPolyGenerator(iters)
-    randPlane = planeTransofrm(layersList)
+    layersList = [randPolyGenerator(iters)]
+    randPlane = planeTransform(layersList)
     points = pointsList(randPlane)
     listOfPlanestoBeAttached = planeMaker(points)
     planesAsTuples = listCompression(listOfPlanestoBeAttached)
     ccwOrderedListOfListsOfTuples = ccwOrder(planesAsTuples)
     return ccwOrderedListOfListsOfTuples
 
+#Takes in a list of lists of tuples, averages and returns a points at the average "centroid"
 def centroid(points):
-    xCoords, yCoords, zCoords = zip(*points)
+    xCoords, yCoords, zCoords = separateCoords(points)
     avgX = sum(xCoords) / len(points)
     avgY = sum(yCoords) / len(points)
     avgZ = sum(zCoords) / len(points)
     return(avgX, avgY, avgZ)
 
+#Separates the list of lists of tuples into their respective coordinates and returns the list
+def separateCoords(polyInfo):
+    x, y, z = [], [], []
+    for group in polyInfo:
+        for pt in group:
+            x.append(pt[0])
+            y.append(pt[1])
+            z.append(pt[2])
+    return x, y, z 
+
+#Adjusts all of the values so that the centroid of the object is at zero
 def center(points):
     cent = centroid(points)
     cx, cy, cz = cent
     centeredCoords = []
-    for x, y, z in points:
-        centeredCoords.append((x - cx, y - cy, z - cz))
+    for group in points:
+        for x, y, z in group:
+            centeredCoords.append((x - cx, y - cy, z - cz))
     return centeredCoords
 
-"""Use shapely to get a centroid
-from shapely.geometry import Polygon
-
-# Define vertices (last point must match the first to close the polygon)
-vertices = [(0, 0), (4, 0), (4, 4), (0, 4), (0, 0)]
-poly = Polygon(vertices)
-
-print(poly.centroid)  # Output: POINT (2 2)
-print(poly.centroid.x, poly.centroid.y)
-
-need to do this for two different planes, in order to get all three values
-"""
-
-
-#Random number of iterations for the random polygon
-#randIters = random.randint(3, 4)
-#List of all of the layers generated by the random polygon generator, currently zero z values, hasn't been transformed yet
-#layersList = [randPolyGenerator(randIters)]
-#Now all of the layers have been randomly transformed across the x or y axis with new z values and stored in this list
-#randPlane = planeTransform(layersList)
-#Turn the list of lists into a single list
-#points = pointsList(randPlane)
-
-###NEW TESTING HERE
-#emptyList, listOfPlanestoBeAttached = planeMaker(points)
-#planesAsTuples = listCompression(listOfPlanestoBeAttached)
-#ccwOrderedListOfListOfTuples = ccwOrder(planesAsTuples)
-#print(f"List of prePoints: {points}")
-#print(f"List of points: {listOfPlanestoBeAttached}")
-#print(f"List of planes as tuples: {planesAsTuples}")
-#print(f"List of CCW ordered planes as a list of tuples: {ccwOrderedListOfListOfTuples}")
-
-randPoly = 
-
-
+randPoly = rand3dPolyGen(random.randint(3, 4))
+print(f"Here it is{randPoly}")
+randPoly = center(randPoly)
 
 #with open('listOfListsOfTuples.pkl', 'wb') as f:
-#    pickle.dump(ccwOrderedListOfListOfTuples, f)
+    #pickle.dump(randPoly, f)
+
+
+
+
