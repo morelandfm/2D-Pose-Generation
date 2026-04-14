@@ -1,0 +1,79 @@
+"""What we are doing here is everything that you can do from the actual user interface
+just with the code, this makes it a little more intuitive for me"""
+
+#Naming the object
+obj_name = "my shape"
+#Adding mesh to the object
+mesh_data = bpy.data.meshes.new(f"{obj_name}_data")
+#Adding mesh object using mesh data
+mesh_obj = bpy.data.objects.new(obj_name, mesh_data)
+#Links the mesh to my shape and adds it to the scene
+bpy.context.scene.collection.objects.link(mesh_obj)
+
+bm = bmesh.new()
+
+"""bmesh.ops.create_icosphere(bm, subdivisions = 1, radius = 2.0)"""
+
+
+"""In console can write
+
+import bmesh
+
+bmesh.ops.create_ then press tab to see options"""
+
+
+vert_coords = [
+    (1.0, 1.0, 0.0),
+    (1.0, -1.0, 0.0),
+    (-1.0, -1.0, 0.0),
+    (-1.0, 1.0, 0.0),
+    (0.0, 0.0, 1.0),
+]
+
+for coord in vert_coords:
+    bm.verts.new(coord)
+
+bm.verts.ensure_lookup_table()   
+
+face_vert_indices = [
+    (0, 1, 2, 3),
+    (4, 1, 0),
+    (4, 2, 1),
+    (4, 3, 2),
+    (4, 0, 3)
+    ]
+
+for vert_indices in face_vert_indices:
+    bm.faces.new([bm.verts[index] for index in vert_indices])
+
+#Writes bmesh data into the mesh data
+bm.to_mesh(mesh_data)
+
+#Update the mesh data, this helps with redrawing the mesh in the viewport
+mesh_data.update()
+
+#Clean up and free memory that was allocated for the bmesh
+bm.free()
+
+#Other stuff from the end of the video to play with 
+
+"""
+What this does it let you pick vertices on your object
+and once you have highlighted them, it will print
+a list showing exactly which verts have been selected
+
+mesh_obj = bpy.context.active_object
+
+bm = bmesh.from_edit_mesh(mesh_obj_data)
+
+selected_verts = []
+
+for vert in bm.verts:
+    if vert.select:
+        selected_verts.append(vert)
+        
+print("selected vert")
+for ver in selected_verts:
+    print(f"{vert_index}")
+
+bm.free()"""
