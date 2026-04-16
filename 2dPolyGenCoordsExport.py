@@ -15,6 +15,30 @@ def listCompression(listOfLists):
         newListOfTuples.append(tuple(point))
     return(newListOfTuples)
 
+#Takes in a list of lists of tuples, averages and returns a points at the average "centroid"
+def centroid(points):
+    xCoords, yCoords, zCoords = separateCoords(points)
+    avgX = sum(xCoords) / len(xCoords)
+    avgY = sum(yCoords) / len(yCoords)
+    return(avgX, avgY)
+
+#Separates the list of lists of tuples into their respective coordinates and returns the list
+def separateCoords(polyInfo):
+    x, y, z = [], [], []
+    for pt in polyInfo:
+        x.append(pt[0])
+        y.append(pt[1])
+        z.append(pt[2])
+    return x, y, z 
+
+#Adjusts all of the values so that the centroid of the object wrt the xy plane is at zero
+def center(points):
+    centeredCoords = []
+    cx, cy = centroid(points)
+    for coord in points:
+        centeredCoords.append((coord[0] - cx, coord[1] - cy, coord[2]))
+    return centeredCoords
+
 #This set of instructions generates a list of coordinates for a 2d polygon
 #The list has two sets of points for each one generted by the random polygon generator
 #One with a z value of zero and one with a z value of one so as to effectively extrude the polygon to three dimensions
@@ -27,8 +51,11 @@ for k in range(len(x_coords)):
         coordsZ = [x_coords[k], y_coords[k], 1]
         listOfCoords.append(coords)
         listOfCoords.append(coordsZ)
-tupleCoords = listCompression(listOfCoords)
-print(f"Here's the list: {tupleCoords}")
 
-with open('listOf2dCoordsExtruded.pkl', 'wb') as f:
-    pickle.dump(tupleCoords, f)
+tupleCoords = listCompression(listOfCoords)
+centeredTupleCoords = center(tupleCoords)
+print(f"Here's the list: {centeredTupleCoords}")
+
+#with open('listOf2dCoordsExtruded.pkl', 'wb') as f:
+    #pickle.dump(tupleCoords, f)
+
