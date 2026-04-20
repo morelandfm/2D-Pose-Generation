@@ -39,6 +39,10 @@ def center(points):
         centeredCoords.append((coord[0] - cx, coord[1] - cy, coord[2]))
     return centeredCoords
 
+#Takes in a list of tuples and orders them CCW
+def ccwOrder(listOfTuples):   
+    return sorted(listOfTuples, key=lambda p: math.atan2(p[1], p[0]))
+
 #This set of instructions generates a list of coordinates for a 2d polygon
 #The list has two sets of points for each one generted by the random polygon generator
 #One with a z value of zero and one with a z value of one so as to effectively extrude the polygon to three dimensions
@@ -54,7 +58,10 @@ for k in range(len(x_coords)):
 
 tupleCoords = listCompression(listOfCoords)
 centeredTupleCoords = center(tupleCoords)
-print(f"Here's the list: {centeredTupleCoords}")
+#orderedTuples = ccwOrder(centeredTupleCoords)
+orderedTuples = ccwOrder(centeredTupleCoords)
+print(f"Here's the list: {orderedTuples}")
+print(f"Other list to compare: {centeredTupleCoords}")
 
 #with open('listOf2dCoordsExtruded.pkl', 'wb') as f:
     #pickle.dump(tupleCoords, f)
