@@ -30,14 +30,39 @@ for coord in vertCoords:
 
 bm.verts.ensure_lookup_table()
 
+###
+#Working here
+#Making a function that labels each point as a number in the list and return a list of tuples that have the points that will be connected to each other.
+#Each tuple needs to have four points because each face (Except the top and the bottom) will be represented as a rectangle
+#Once the iteration reaches the end it needs to close the object with respect to the xy plane by iterating back to the beginning with the first and last point
+#For the top and the bottom need to have two separate tuples that have all the z = 1 coords and another with all of the z = 0 coords
 def makeIndices(listOfCoords):
-  faceVertIndices = []
-  length = len(listOfCoords)
-  for i in range(length):
-    if (i+3) > length:
-      
-    faceVertTup = (i, i+1, i+2, i+3)
+    faceVertIndices = []
+    length = len(listOfCoords)
+    for i in range(0, length, 2):
+        #This is for the last one
+        if (i+2) > length:
+            faceVertTup = (i, i+1, 0, 1)
+        #This is for all of the others
+        else:
+            faceVertTup = (i, i+1, i+2, i+3)
+        faceVertIndices.append(faceVertTup)
+    #This is for getting the z = 0 values for its face
+    botVertList = []
+    for k in range(0, length):
+        if k == 0 or k % 2 == 0:
+            botVertList.append(k)
     faceVertIndices.append(faceVertTup)
+    #This is for getting all of the z = 1 values for its face
+    topVertList = []
+    for l in range(0, length):
+        if l == 1 or l % 2 != 0:
+            topVertList.append(l)
+    faceVertIndices.append(tuple(topVertList)) 
+    faceVertIndices.append(tuple(botVertList))
+    return faceVertIndices
+
+
     
     
 
