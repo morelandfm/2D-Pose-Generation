@@ -1,3 +1,4 @@
+#Testing currently being done in testing labeled 2dmesh blender file
 import pickle
 import bpy
 import bmesh
