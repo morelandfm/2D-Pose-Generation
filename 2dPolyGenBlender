@@ -42,30 +42,21 @@ def makeIndices(listOfCoords):
     length = len(listOfCoords)
     for i in range(0, length, 2):
         #This is for the last one
-        if (i+2) > length:
+        if (i+2) == length:
             faceVertTup = (i, i+1, 0, 1)
         #This is for all of the others
         else:
             faceVertTup = (i, i+1, i+2, i+3)
         faceVertIndices.append(faceVertTup)
     #This is for getting the z = 0 values for its face
-    botVertList = []
-    for k in range(0, length):
-        if k == 0 or k % 2 == 0:
-            botVertList.append(k)
-    faceVertIndices.append(faceVertTup)
+    botVertList = list(range(0, length, 2))
+
     #This is for getting all of the z = 1 values for its face
-    topVertList = []
-    for l in range(0, length):
-        if l == 1 or l % 2 != 0:
-            topVertList.append(l)
+    topVertList = list(range(1, length, 2))
+
     faceVertIndices.append(tuple(topVertList)) 
     faceVertIndices.append(tuple(botVertList))
-    return faceVertIndices
-
-
-    
-    
+    return faceVertIndices    
 
 #Old stuff used before
 """#Want to break the list of lists of tuples into individual lists of tuples
