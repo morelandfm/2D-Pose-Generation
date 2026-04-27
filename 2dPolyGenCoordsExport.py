@@ -50,24 +50,25 @@ def ccwOrder(listOfTuples):
 #This set of instructions generates a list of coordinates for a 2d polygon
 #The list has two sets of points for each one generted by the random polygon generator
 #One with a z value of zero and one with a z value of one so as to effectively extrude the polygon to three dimensions
+scaleFac = 2
 x_coords, y_coords = zip(*random_polygon(num_points = random.randint(4,8)))
 x_coords = list(x_coords) + [x_coords[0]]
 y_coords = list(y_coords) + [y_coords[0]]
 listOfCoords = []
 for k in range(len(x_coords)):
-        coords = [x_coords[k], y_coords[k], -0.5]
-        coordsZ = [x_coords[k], y_coords[k], 0.5]
+        coords = [x_coords[k] * scaleFac, y_coords[k] * scaleFac, -0.5]
+        coordsZ = [x_coords[k] * scaleFac, y_coords[k] * scaleFac, 0.5]
         listOfCoords.append(coords)
         listOfCoords.append(coordsZ)
 
 tupleCoords = listCompression(listOfCoords)
 centeredTupleCoords = center(tupleCoords)
 undupedTupleCoords = dupFinder(centeredTupleCoords)
-#orderedTuples = ccwOrder(centeredTupleCoords)
 orderedTuples = ccwOrder(undupedTupleCoords)
 print(f"Here's the list: {orderedTuples}")
 print(f"Other list to compare: {tupleCoords}")
-print(f"Length: {len(orderedTuples)}")
+print(f"Old length: {len(centeredTupleCoords)}")
+print(f"New length: {len(orderedTuples)}")
 
-with open('listOf2dCoordsExtruded.pkl', 'wb') as f:
-    pickle.dump(orderedTuples, f)
+#with open('listOf2dCoordsExtruded.pkl', 'wb') as f:
+    #pickle.dump(orderedTuples, f)
