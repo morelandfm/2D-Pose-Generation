@@ -22,6 +22,10 @@ def centroid(points):
     avgY = sum(yCoords) / len(yCoords)
     return(avgX, avgY)
 
+#Check for duplicates, replace them if found
+def dupFinder(points):
+    return list(dict.fromkeys(points))
+
 #Separates the list of lists of tuples into their respective coordinates and returns the list
 def separateCoords(polyInfo):
     x, y, z = [], [], []
@@ -46,23 +50,24 @@ def ccwOrder(listOfTuples):
 #This set of instructions generates a list of coordinates for a 2d polygon
 #The list has two sets of points for each one generted by the random polygon generator
 #One with a z value of zero and one with a z value of one so as to effectively extrude the polygon to three dimensions
-x_coords, y_coords = zip(*random_polygon(num_points = random.randint(3,7)))
+x_coords, y_coords = zip(*random_polygon(num_points = random.randint(4,8)))
 x_coords = list(x_coords) + [x_coords[0]]
 y_coords = list(y_coords) + [y_coords[0]]
 listOfCoords = []
 for k in range(len(x_coords)):
-        coords = [x_coords[k], y_coords[k], 0]
-        coordsZ = [x_coords[k], y_coords[k], 1]
+        coords = [x_coords[k], y_coords[k], -0.5]
+        coordsZ = [x_coords[k], y_coords[k], 0.5]
         listOfCoords.append(coords)
         listOfCoords.append(coordsZ)
 
 tupleCoords = listCompression(listOfCoords)
 centeredTupleCoords = center(tupleCoords)
+undupedTupleCoords = dupFinder(centeredTupleCoords)
 #orderedTuples = ccwOrder(centeredTupleCoords)
-orderedTuples = ccwOrder(centeredTupleCoords)
+orderedTuples = ccwOrder(undupedTupleCoords)
 print(f"Here's the list: {orderedTuples}")
-print(f"Other list to compare: {centeredTupleCoords}")
+print(f"Other list to compare: {tupleCoords}")
+print(f"Length: {len(orderedTuples)}")
 
-#with open('listOf2dCoordsExtruded.pkl', 'wb') as f:
-    #pickle.dump(tupleCoords, f)
-
+with open('listOf2dCoordsExtruded.pkl', 'wb') as f:
+    pickle.dump(orderedTuples, f)
