@@ -40,17 +40,30 @@ def center(points):
     centeredCoords = []
     cx, cy = centroid(points)
     for coord in points:
-        centeredCoords.append((coord[0] - cx, coord[1] - cy, coord[2]))
+        centeredCoords.append((round(coord[0] - cx, 2), round(coord[1] - cy, 2), coord[2]))
     return centeredCoords
 
 #Takes in a list of tuples and orders them CCW
 def ccwOrder(listOfTuples):   
     return sorted(listOfTuples, key=lambda p: math.atan2(p[1], p[0]))
 
+#Function takes in a list of lists and returns the list with each value rounded to three sig figs
+def threeSigs(lol):
+    newLol = []
+    for coord in lol:
+        newCoord = []    
+        for point in coord:
+            newCoord.append(round(point, 2))
+        newLol.append(newCoord)
+    return newLol
+            
+
+
+
 #This set of instructions generates a list of coordinates for a 2d polygon
 #The list has two sets of points for each one generted by the random polygon generator
 #One with a z value of zero and one with a z value of one so as to effectively extrude the polygon to three dimensions
-scaleFac = 2
+scaleFac = 10
 x_coords, y_coords = zip(*random_polygon(num_points = random.randint(4,8)))
 x_coords = list(x_coords) + [x_coords[0]]
 y_coords = list(y_coords) + [y_coords[0]]
@@ -61,7 +74,8 @@ for k in range(len(x_coords)):
         listOfCoords.append(coords)
         listOfCoords.append(coordsZ)
 
-tupleCoords = listCompression(listOfCoords)
+newLol = threeSigs(listOfCoords)
+tupleCoords = listCompression(newLol)
 centeredTupleCoords = center(tupleCoords)
 undupedTupleCoords = dupFinder(centeredTupleCoords)
 orderedTuples = ccwOrder(undupedTupleCoords)
